@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Redirecting...</title>
+  <script>
+    // Skrip ini menangani URL yang tidak ditemukan.
+    // Jika URL diakses tanpa .html, coba arahkan ke file .html yang sesuai.
+    (function() {
+      var path = window.location.pathname;
+      // Jika path TIDAK memiliki ekstensi file
+      if (!path.includes('.')) {
+        // Buat URL baru dengan menambahkan .html
+        var newPath = path + '.html';
+        // Lakukan fetch untuk memeriksa apakah file tersebut ada
+        fetch(newPath, { method: 'HEAD' })
+          .then(function(response) {
+            if (response.ok) {
+              // Jika file ada, muat kontennya ke halaman ini
+              // tanpa mengubah URL di address bar.
+              return fetch(newPath).then(function(res) { return res.text(); });
+            }
+          })
+          .then(function(html) {
+            if (html) {
+              // Ganti seluruh konten halaman dengan konten dari file .html
+              document.open();
+              document.write(html);
+              document.close();
+            }
+          })
+          .catch(function() {
+            // Jika gagal, biarkan halaman 404 standar atau tampilkan pesan
+          });
+      }
+    })();
+  </script>
+</head>
+<body>
+  <p>Loading...</p>
+</body>
+</html>
